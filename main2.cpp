@@ -47,22 +47,25 @@ vector<Passenger> readCSV(const string& filename) {
 
 int main() {
     srand(time(0));
-    vector<int> sizes = {100, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 750000, 1000000};
+    string filename;
+    cout << "Введите имя файла для поиска (например, data_1000.csv): ";
+    cin >> filename;
+
+    cout << "Чтение файла: " << filename << "..." << endl;
+    vector<Passenger> data = readCSV(filename);
     
-    ofstream resultsFile("search_benchmark.csv");
-    resultsFile << "Size,Linear_ns,BST_ns,RBT_ns,Hash_ns,MultiMap_ns,HashCollisions\n";
+    if (data.empty()) {
+        cerr << "Ошибка: Файл пуст или не найден!" << endl;
+        return 1;
+    }
 
-    cout << "Начинаем тестирование алгоритмов ПОИСКА...\n";
+    int n = data.size();
+    cout << "Успешно считано " << n << " записей." << endl;
 
-    for (int size : sizes) {
-        string filename = "data_" + to_string(size) + ".csv";
-        vector<Passenger> data = readCSV(filename);
-        if (data.empty()) continue;
-
-        // 1. Инициализация структур (Время заполнения НЕ учитываем)
+        // 1. Инициализация структур
         BST bst;
         RedBlackTree rbt;
-        HashTable ht(size * 1.5); // Емкость хэш-таблицы с запасом
+        HashTable ht(size * 1.5);
         multimap<string, Passenger> mmap;
 
         for (const auto& p : data) {
@@ -114,7 +117,6 @@ int main() {
                     << ht.getCollisions() << "\n";
                     
         cout << "Размер " << size << " обработан.\n";
-    }
 
     cout << "Тестирование завершено! Результаты в search_benchmark.csv\n";
     return 0;
