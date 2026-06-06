@@ -65,7 +65,7 @@ int main() {
         // 1. Инициализация структур
         BST bst;
         RedBlackTree rbt;
-        HashTable ht(size * 1.5);
+        HashTable ht(n * 1.5);
         multimap<string, Passenger> mmap;
 
         for (const auto& p : data) {
@@ -112,12 +112,11 @@ int main() {
         stop = high_resolution_clock::now();
         long long timeMMap = duration_cast<nanoseconds>(stop - start).count();
 
-        resultsFile << size << "," << timeLinear << "," << timeBST << "," 
-                    << timeRBT << "," << timeHash << "," << timeMMap << "," 
-                    << ht.getCollisions() << "\n";
-                    
-        cout << "Размер " << size << " обработан.\n";
-
-    cout << "Тестирование завершено! Результаты в search_benchmark.csv\n";
+    cout << "\n--- Результаты поиска (наносекунды) ---" << endl;
+    cout << "Линейный поиск: " << timeLinear << " ns" << endl;
+    cout << "BST:            " << timeBST << " ns" << endl;
+    cout << "RBT:            " << timeRBT << " ns" << endl;
+    cout << "Хэш-таблица:    " << timeHash << " ns (коллизий: " << ht.getCollisions() << ")" << endl;
+    cout << "std::multimap:  " << timeMMap << " ns" << endl;
     return 0;
 }
